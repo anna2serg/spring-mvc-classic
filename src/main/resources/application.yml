@@ -1,0 +1,18 @@
+application: 
+  fetchsize: 5
+
+spring:
+  datasource:
+    platform: dev
+    initialization-mode: always
+    url: jdbc:postgresql://localhost:5432/bookcardDB 
+    username: scribe 
+    password: scribe 
+  jpa:
+    hibernate:
+      ddl-auto: none      
+  profiles:
+    active: dev
+  shell:
+    interactive:
+      enabled: true      
