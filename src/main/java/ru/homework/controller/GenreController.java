@@ -9,6 +9,7 @@ import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,8 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.homework.controller.GenreController.Filter;
 import ru.homework.domain.Genre;
+import ru.homework.dto.GenreDto;
 import ru.homework.exception.NotFoundException;
 import ru.homework.repository.GenreRepository;
 
@@ -36,9 +37,6 @@ public class GenreController {
 	    }
 	}	
 	
-    private static int currentPage = 1;
-    private static int pageSize = 2;	
-    private static Filter nameFilter;
 	private final GenreRepository repository;
 	
     @Autowired
@@ -53,17 +51,17 @@ public class GenreController {
 			    	        @RequestParam("page") Optional<Integer> page, 
 			    	        @RequestParam("size") Optional<Integer> size) {
  	
-        page.ifPresent(p -> currentPage = p);
-        size.ifPresent(s -> pageSize = s);   	
-        
+    	int currentPage = page.orElse(1);
+    	int pageSize = size.orElse(2);
+
+    	Filter nameFilter = filter.orElse(null); 
         Page<Genre> genrePage = null;
-        filter.ifPresent(f -> nameFilter = f);
         
     	HashMap<String, String> filters = new HashMap<>();
-    	if (nameFilter == null || nameFilter.getValue().equals("")) {
+    	if (nameFilter != null && !nameFilter.getValue().equals("")) {
     		filters.put("name", nameFilter.getValue());
     	}    	
-    	genrePage = repository.findAllByFilters(filters, PageRequest.of(currentPage - 1, pageSize));
+    	genrePage = repository.findAllByFilters(filters, PageRequest.of(currentPage - 1, pageSize, Sort.by("id").ascending()));
 
         model.addAttribute("genrePage", genrePage);
         
@@ -80,19 +78,36 @@ public class GenreController {
         return "genre_all";
     }    
 	
+    @GetMapping("/genres/add")
+    public String addGenre(Model model) {
+    	GenreDto genreDto = new GenreDto();
+        model.addAttribute("genreDto", genreDto);
+        return "genre_add";
+    }    
+    
+    @PostMapping("/genres/add")
+    public String saveNewGenre(@ModelAttribute("genreDto") GenreDto genreDto,
+    						   Model model) {
+    	Genre genre = GenreDto.toDomainObject(genreDto);   	
+        repository.save(genre);     
+        return "redirect:/genres";        
+    }       
+    
     @GetMapping("/genres/edit/{id}")
     public String editGenre(@PathVariable("id") int id, Model model) {
     	Genre genre = repository.findById(id).orElseThrow(NotFoundException::new);
-        model.addAttribute("genre", genre);
+    	GenreDto genreDto = GenreDto.toDto(genre);
+        model.addAttribute("genreDto", genreDto);
         return "genre_edit";
     }    
     
     @PostMapping("/genres/edit/{id}")
     public String saveGenre(@PathVariable("id") int id,
-					        @RequestParam("name") String name,
+    						@ModelAttribute("genreDto") GenreDto genreDto,
 						    Model model) {
-    	Genre genre = repository.findById(id).orElseThrow(NotFoundException::new);
-    	genre.setName(name);
+    	Genre updGenre = GenreDto.toDomainObject(genreDto);
+    	Genre genre = repository.findById(updGenre.getId()).orElseThrow(NotFoundException::new);
+    	genre.setName(updGenre.getName());
         repository.save(genre);
         
         return "redirect:/genres";        

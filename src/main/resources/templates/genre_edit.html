@@ -9,8 +9,8 @@
 </head>
 <body>
 
-<form id="genre-edit-form" th:action="@{/genres/edit/{id}(id=${genre.id})}" th:method="post" action="genre_all.html">
-	<div th:object="${genre}">
+<form id="genre-edit-form" th:object="${genreDto}" th:action="@{/genres/edit/{id}(id=${genreDto.id})}" th:method="post" action="genre_all.html">
+	<div>
 	    <h1>Информация о жанре:</h1>
 	
 	    <div class="row">
