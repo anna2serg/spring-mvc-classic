@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Жанры</title>
+	<link rel="stylesheet" type="text/css" media="all" href="../static/style.css" th:href="@{/style.css}" >
+    <style>
+    </style>
+</head>
+<body>
+<h1>Жанры:</h1>
+
+<table class="genres">
+    <thead>
+    <tr>
+        <th>ИД</th>
+        <th>Наименование</th>
+        <th>Действия</th>
+    </tr>
+    <tr>
+        <th></th>
+        <th>
+			<form id="genre-filter-name" 
+			th:action="@{/genres}" 
+			th:object="${filter}" method="get">
+				<div>
+					<div>
+						Фильтр: <input id="filter" type="text" th:field="*{value}"/>
+						<input name="size" th:value="${genrePage.size}"/>
+						<input name="page" th:value="${currentPage}"/>
+						<button><i>&#xe8b6;</i></button>
+					</div>
+				</div>
+			</form>		
+		</th>
+        <th></th>
+    </tr>	
+    </thead>
+    <tbody>
+    <tr th:each="genre, iStat : ${genrePage.content}">
+        <td th:text="${genre.id}">1</td>
+        <td th:text="${genre.name}">Test genre</td>
+        <td>
+            <a th:href="@{/genres/edit/{id}(id=${genre.id})}" href="genre_edit.html">Изменить</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div th:if="${genrePage.totalPages > 0}" class="pagination" th:each="pageNumber : ${pageNumbers}">
+    <a th:href="@{/genres(size=${genrePage.size}, page=${pageNumber}, value=${filter.value})}"
+       th:text=${pageNumber}>
+	</a>
+</div>
+</body>
+</html>
