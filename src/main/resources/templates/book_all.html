@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Книги</title>
+	<link rel="stylesheet" type="text/css" media="all" href="../static/style.css" th:href="@{/style.css}" >
+	<script type="text/javascript" src="../static/scripts/common.js" th:src="@{/scripts/common.js}"></script>
+</head>
+<body>
+<h1>Книги:</h1>
+<a th:href="@{/books/add}" href="book_add.html">Добавить книгу</a>
+<table class="list">
+    <thead>
+    <tr>
+        <th>ИД</th>
+        <th>Наименование</th>
+		<th>Жанр</th>
+		<th>Авторы</th>
+        <th>Действия</th>
+    </tr>
+    <tr>
+        <th></th>
+        <th>
+			<form id="book-filter-name" 
+			th:action="@{/books}" 
+			th:object="${filter}" method="get">
+				<div>
+					<div>
+						Фильтр: <input id="filter" type="text" th:field="*{name}"/>
+						<input name="size" th:value="${bookPage.size}" type="hidden"/>
+						<input name="page" th:value="${currentPage}" type="hidden"/>
+					</div>
+				</div>
+			</form>		
+		</th>
+		<th></th>
+		<th></th>
+        <th></th>
+    </tr>	
+    </thead>
+    <tbody>
+    <div th:each="book, iStat : ${bookPage.content}" th:with="authorCount=${#sets.size(book.authors)}">
+		<tr>
+			<td th:text="${book.id}" th:rowspan="${#sets.size(book.authors)}">1</td>
+			<td th:text="${book.name}" th:rowspan="${#sets.size(book.authors)}">Букварь</td>
+			<td th:text="${book.genre.name}" th:rowspan="${#sets.size(book.authors)}">Учебная литература</td>			
+			<td th:text="${authorCount>0}?${book.authors[0].surname}:''"></td>
+			<td th:rowspan="${#sets.size(book.authors)}">
+				<a th:href="@{/books/edit/{id}(id=${book.id})}" href="book_edit.html">Изменить</a>
+			</td>			
+		</tr>
+		<tr th:each="author,stats:${book.authors}" th:if="${!stats.first}">
+			<td th:text="${author.surname}">Автор букваря</td>
+		</tr>		
+    </div>
+    </tbody>
+</table>
+<div th:if="${bookPage.totalPages > 0}" class="pagination" th:each="pageNumber : ${pageNumbers}">
+    <a th:href="@{/books(size=${bookPage.size}, page=${pageNumber}, name=${filter.name})}"
+       th:text=${pageNumber}>
+	</a>
+</div>
+<script>
+	var filter = document.getElementById('filter');
+	var filterForm = document.getElementById('book-filter-name');
+	filter.oninput = function() {
+		filterForm.submit();
+	};
+	filter.onfocus = function() {
+		Common.moveCaretToEnd(filter);
+		// Work around Chrome's little problem
+		window.setTimeout(function() {
+			Common.moveCaretToEnd(filter);
+		}, 1);
+	};  
+	filter.focus();
+</script>
+</body>
+</html>

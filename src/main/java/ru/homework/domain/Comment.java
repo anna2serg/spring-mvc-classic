@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import ru.homework.helper.Helper;
+import ru.homework.common.Helper;
 
 @Entity
 @Table(name = "comments")

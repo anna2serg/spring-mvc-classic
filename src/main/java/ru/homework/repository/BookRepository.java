@@ -11,9 +11,9 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.querydsl.core.BooleanBuilder;
 
+import ru.homework.common.Helper;
 import ru.homework.domain.Book;
 import ru.homework.domain.QBook;
-import ru.homework.helper.Helper;
 
 public interface BookRepository extends PagingAndSortingRepository<Book, Integer>, QuerydslPredicateExecutor<Book> {
 

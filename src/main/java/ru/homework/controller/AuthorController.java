@@ -20,23 +20,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.homework.common.FilterByName;
-import ru.homework.domain.Genre;
-import ru.homework.dto.GenreDto;
+import ru.homework.domain.Author;
+import ru.homework.dto.AuthorDto;
 import ru.homework.exception.NotFoundException;
-import ru.homework.repository.GenreRepository;
+import ru.homework.repository.AuthorRepository;
 
 @Controller
-public class GenreController {
-	
-	private final GenreRepository repository;
+public class AuthorController {
+	private final AuthorRepository repository;
 	
     @Autowired
-    public GenreController(GenreRepository repository) {
+    public AuthorController(AuthorRepository repository) {
         this.repository = repository;
     }	
     
-    @GetMapping("/genres")
-    public String listGenres(Model model, 
+    @GetMapping("/authors")
+    public String listAuthors(Model model, 
     						@ModelAttribute("filter") Optional<FilterByName> filter,
 			    	        BindingResult result,
 			    	        @RequestParam("page") Optional<Integer> page, 
@@ -46,17 +45,17 @@ public class GenreController {
     	int pageSize = size.orElse(2);
 
     	FilterByName nameFilter = filter.orElse(null); 
-        Page<Genre> genrePage = null;
+        Page<Author> authorPage = null;
         
     	HashMap<String, String> filters = new HashMap<>();
     	if (nameFilter != null && !nameFilter.getName().equals("")) {
     		filters.put("name", nameFilter.getName());
     	}    	
-    	genrePage = repository.findAllByFilters(filters, PageRequest.of(currentPage - 1, pageSize, Sort.by("id").ascending()));
+    	authorPage = repository.findAllByFilters(filters, PageRequest.of(currentPage - 1, pageSize, Sort.by("id").ascending()));
 
-        model.addAttribute("genrePage", genrePage);
+        model.addAttribute("authorPage", authorPage);
         
-        int totalPages = genrePage.getTotalPages();
+        int totalPages = authorPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
                 .boxed()
@@ -66,42 +65,44 @@ public class GenreController {
         
         model.addAttribute("currentPage", currentPage);
         
-        return "genre_all";
+        return "author_all";
     }    
 	
-    @GetMapping("/genres/add")
-    public String addGenre(Model model) {
-    	GenreDto genreDto = new GenreDto();
-        model.addAttribute("genreDto", genreDto);
-        return "genre_add";
+    @GetMapping("/authors/add")
+    public String addAuthor(Model model) {
+    	AuthorDto authorDto = new AuthorDto();
+        model.addAttribute("authorDto", authorDto);
+        return "author_add";
     }    
     
-    @PostMapping("/genres/add")
-    public String saveNewGenre(@ModelAttribute("genreDto") GenreDto genreDto,
+    @PostMapping("/authors/add")
+    public String saveNewAuthor(@ModelAttribute("authorDto") AuthorDto authorDto,
     						   Model model) {
-    	Genre genre = GenreDto.toDomainObject(genreDto);   	
-        repository.save(genre);     
-        return "redirect:/genres";        
+    	Author author = AuthorDto.toDomainObject(authorDto);   	
+        repository.save(author);     
+        return "redirect:/authors";        
     }       
     
-    @GetMapping("/genres/edit/{id}")
-    public String editGenre(@PathVariable("id") int id, Model model) {
-    	Genre genre = repository.findById(id).orElseThrow(NotFoundException::new);
-    	GenreDto genreDto = GenreDto.toDto(genre);
-        model.addAttribute("genreDto", genreDto);
-        return "genre_edit";
+    @GetMapping("/authors/edit/{id}")
+    public String editAuthor(@PathVariable("id") int id, Model model) {
+    	Author author = repository.findById(id).orElseThrow(NotFoundException::new);
+    	AuthorDto authorDto = AuthorDto.toDto(author);
+        model.addAttribute("authorDto", authorDto);
+        return "author_edit";
     }    
     
-    @PostMapping("/genres/edit/{id}")
-    public String saveGenre(@PathVariable("id") int id,
-    						@ModelAttribute("genreDto") GenreDto genreDto,
+    @PostMapping("/authors/edit/{id}")
+    public String saveAuthor(@PathVariable("id") int id,
+    						@ModelAttribute("authorDto") AuthorDto authorDto,
 						    Model model) {
-    	Genre updGenre = GenreDto.toDomainObject(genreDto);
-    	Genre genre = repository.findById(updGenre.getId()).orElseThrow(NotFoundException::new);
-    	genre.setName(updGenre.getName());
-        repository.save(genre);
+    	Author updAuthor = AuthorDto.toDomainObject(authorDto);
+    	Author author = repository.findById(updAuthor.getId()).orElseThrow(NotFoundException::new);
+    	author.setSurname(updAuthor.getSurname());
+    	author.setFirstname(updAuthor.getFirstname());
+    	author.setMiddlename(updAuthor.getMiddlename());
+        repository.save(author);
         
-        return "redirect:/genres";        
+        return "redirect:/authors";        
     }   
-    
+   
 }

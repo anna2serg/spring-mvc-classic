@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.homework.common.Helper;
 import ru.homework.domain.Author;
 import ru.homework.domain.Book;
 import ru.homework.domain.Comment;
@@ -18,7 +19,6 @@ import ru.homework.exception.EntityNotFoundException;
 import ru.homework.exception.InvalidOperationException;
 import ru.homework.exception.InvalidValueFormatException;
 import ru.homework.exception.NotUniqueEntityFoundException;
-import ru.homework.helper.Helper;
 import ru.homework.repository.AuthorRepository;
 import ru.homework.repository.BookRepository;
 import ru.homework.repository.CommentRepository;

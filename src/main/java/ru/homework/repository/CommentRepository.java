@@ -9,9 +9,9 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.querydsl.core.BooleanBuilder;
 
+import ru.homework.common.Helper;
 import ru.homework.domain.Comment;
 import ru.homework.domain.QComment;
-import ru.homework.helper.Helper;
 
 public interface CommentRepository extends PagingAndSortingRepository<Comment, Integer>, QuerydslPredicateExecutor<Comment> {
 	

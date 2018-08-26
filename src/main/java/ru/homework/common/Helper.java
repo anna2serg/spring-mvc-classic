@@ -1,4 +1,4 @@
-package ru.homework.helper;
+package ru.homework.common;
 
 public class Helper {
 	private final static String NON_THIN = "[^iIl1\\.,']";

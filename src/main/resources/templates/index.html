@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Картотека книг</title>
+	<link rel="stylesheet" type="text/css" media="all" href="../static/style.css" th:href="@{/style.css}" >
+    <style>
+    </style>
+</head>
+<body>
+<h1>Справочники:</h1>
+<a th:href="@{/genres}" href="genre_all.html">Жанры</a>
+<a th:href="@{/authors}" href="author_all.html">Авторы</a>
+<a th:href="@{/books}" href="book_all.html">Книги</a>
+</body>
+</html>

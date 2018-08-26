@@ -20,7 +20,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import ru.homework.helper.Helper;
+import ru.homework.common.Helper;
 @Entity
 @Table(name = "books")
 public class Book {
