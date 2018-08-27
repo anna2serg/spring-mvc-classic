@@ -15,10 +15,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.homework.common.FilterByName;
 import ru.homework.domain.Book;
+import ru.homework.dto.BookDto;
+import ru.homework.exception.NotFoundException;
 import ru.homework.repository.BookRepository;
 
 @Controller
@@ -53,6 +57,10 @@ public class BookController {
         
         int totalPages = bookPage.getTotalPages();
         if (totalPages > 0) {
+        	if (currentPage > totalPages) { 
+        		currentPage = totalPages;
+        		listBooks(model, filter, result, Optional.ofNullable(currentPage), Optional.ofNullable(pageSize));
+        	}
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
                 .boxed()
                 .collect(Collectors.toList());
@@ -60,8 +68,29 @@ public class BookController {
         }
         
         model.addAttribute("currentPage", currentPage);
-        
         return "book_all";
-    }  
+    } 
+    
+    @GetMapping("/books/edit/{id}")
+    public String editBook(@PathVariable("id") int id, Model model) {
+    	Book book = repository.findById(id).orElseThrow(NotFoundException::new);
+    	BookDto bookDto = BookDto.toDto(book);
+        model.addAttribute("bookDto", bookDto);
+        return "book_edit";
+    }   
+    
+    @PostMapping("/books/edit/{id}")
+    public String saveBook(@PathVariable("id") int id,
+    						@ModelAttribute("bookDto") BookDto bookDto,
+						    Model model) {
+    	Book updBook = BookDto.toDomainObject(bookDto);
+    	Book book = repository.findById(updBook.getId()).orElseThrow(NotFoundException::new);
+    	book.setName(updBook.getName()); 
+    	book.setAuthors(updBook.getAuthors());
+    	book.setGenre(updBook.getGenre());
+        repository.save(book);
+        
+        return "redirect:/books";        
+    }     
     
 }

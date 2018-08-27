@@ -11,7 +11,7 @@
 
 <form id="author-edit-form" th:object="${authorDto}" th:action="@{/authors/edit/{id}(id=${authorDto.id})}" th:method="post" action="author_all.html">
 	<div>
-	    <h1>Информация о об авторе:</h1>
+	    <h1>Информация об авторе:</h1>
 	
 	    <div class="row">
 	        <label for="id-input">ИД:</label>
@@ -21,8 +21,14 @@
 	    <div class="row">
 	        <label for="surname-input">Фамилия:</label>
 	        <input id="surname-input" name="surname" type="text" th:value="*{surname}" value=""/>
+		</div>	
+		
+		<div class="row">	
 	        <label for="firstname-input">Имя:</label>
 	        <input id="firstname-input" name="firstname" type="text" th:value="*{firstname}" value=""/>
+		</div>	
+		
+		<div class="row">	
 	        <label for="middlename-input">Отчество:</label>
 	        <input id="middlename-input" name="middlename" type="text" th:value="*{middlename}" value=""/>				
 	    </div>

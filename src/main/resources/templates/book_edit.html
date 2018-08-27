@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Редактирование информации о книге</title>
+	<link rel="stylesheet" type="text/css" media="all" href="../static/style.css" th:href="@{/style.css}" >
+    <style>
+    </style>
+</head>
+<body>
+
+<form id="book-edit-form" th:object="${bookDto}" th:action="@{/books/edit/{id}(id=${bookDto.id})}" th:method="post" action="book_all.html">
+	<div>
+	    <h1>Информация о книге:</h1>
+	
+	    <div class="row">
+	        <label for="id-input">ИД:</label>
+	        <input id="id-input" type="text" readonly="readonly" th:value="*{id}" value="1"/>
+		</div>
+		
+		<div class="row">		
+	        <label for="name-input">Наименование:</label>
+	        <input id="name-input" name="name" type="text" th:value="*{name}" value="Букварь"/>	
+		</div>
+		
+		<div class="row">			
+	        <label for="genre-input">Жанр:</label>
+	        <input id="genre-input" readonly="readonly" name="genre" type="text" th:value="*{genre.name}" value="Детская литература"/>
+			<a th:href="@{/books/{id}/genre(id=${bookDto.id})}" href="genre_all.html">Изменить</a>			
+	    </div>		
+
+		<label>Авторы:</label>	
+		<div class="row" th:each="author,stats:*{authors}">
+			<td th:text="${author.surname}">Автор букваря</td>
+		</div>			
+		
+	    <div class="row">
+	        <button type="submit">Сохранить</button>
+	    </div>
+	</div>	    
+</form>
+
+</body>
+</html>
