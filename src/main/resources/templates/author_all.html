@@ -43,7 +43,7 @@
 		<td th:text="${author.firstname}">Писаакий</td>
 		<td th:text="${author.middlename}">Иванович</td>
         <td>
-            <a th:href="@{/authors/edit/{id}(id=${author.id})}" href="author_edit.html">Изменить</a>
+            <a th:href="@{/authors/{id}(id=${author.id})}" href="author_edit.html">Изменить</a>
         </td>
     </tr>
     </tbody>

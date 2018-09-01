@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<form id="author-edit-form" th:object="${authorDto}" th:action="@{/authors/edit/{id}(id=${authorDto.id})}" th:method="post" action="author_all.html">
+<form id="author-edit-form" th:object="${authorDto}" th:action="@{/authors/{id}(id=${authorDto.id})}" th:method="post" action="author_all.html">
 	<div>
 	    <h1>Информация об авторе:</h1>
 	

@@ -12,7 +12,4 @@ spring:
     hibernate:
       ddl-auto: none      
   profiles:
-    active: dev
-  shell:
-    interactive:
-      enabled: true      
+    active: dev  

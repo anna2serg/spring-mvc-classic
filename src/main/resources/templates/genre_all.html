@@ -39,7 +39,7 @@
         <td th:text="${genre.id}">1</td>
         <td th:text="${genre.name}">Новый жанр</td>
         <td>
-            <a th:href="@{/genres/edit/{id}(id=${genre.id})}" href="genre_edit.html">Изменить</a>
+            <a th:href="@{/genres/{id}(id=${genre.id})}" href="genre_edit.html">Изменить</a>
         </td>
     </tr>
     </tbody>

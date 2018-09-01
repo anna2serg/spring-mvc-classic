@@ -44,13 +44,18 @@
 			<td th:text="${book.id}" th:rowspan="${#sets.size(book.authors)}">1</td>
 			<td th:text="${book.name}" th:rowspan="${#sets.size(book.authors)}">Букварь</td>
 			<td th:text="${book.genre.name}" th:rowspan="${#sets.size(book.authors)}">Учебная литература</td>			
-			<td th:text="${authorCount>0}?${book.authors[0].surname}:''"></td>
+			<td th:text="${authorCount>0}?${book.authors[0].surname}+ ' ' + 
+										  ${book.authors[0].firstname} + ' ' + 
+										  ${book.authors[0].middlename!=null?book.authors[0].middlename:''}
+										  :''"></td>
 			<td th:rowspan="${#sets.size(book.authors)}">
-				<a th:href="@{/books/edit/{id}(id=${book.id})}" href="book_edit.html">Изменить</a>
+				<a th:href="@{/books/{id}(id=${book.id})}" href="book_edit.html">Изменить</a>
 			</td>			
 		</tr>
 		<tr th:each="author,stats:${book.authors}" th:if="${!stats.first}">
-			<td th:text="${author.surname}">Автор букваря</td>
+			<td th:text="${author.surname} + ' ' + 
+						 ${author.firstname} + ' ' + 
+						 ${author.middlename!=null?author.middlename:''}">Автор букваря</td>
 		</tr>		
     </div>
     </tbody>
