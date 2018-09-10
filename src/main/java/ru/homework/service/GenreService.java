@@ -18,20 +18,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.homework.common.FilterByName;
 import ru.homework.configuration.AppSettings;
+import ru.homework.domain.Book;
 import ru.homework.domain.Genre;
+import ru.homework.dto.BookDto;
 import ru.homework.dto.GenreDto;
 import ru.homework.exception.NotFoundException;
+import ru.homework.repository.BookRepository;
 import ru.homework.repository.GenreRepository;
 
 @Service
 public class GenreService {
 	
-	private final GenreRepository repository;
+	private final GenreRepository genreRepository;
+	private final BookRepository bookRepository;
 	private final AppSettings settings;
 	private int fetchSize;
 	
-	public GenreService(GenreRepository repository, AppSettings settings) {
-		this.repository = repository;
+	public GenreService(GenreRepository genreRepository, BookRepository bookRepository, AppSettings settings) {
+		this.genreRepository = genreRepository;
+		this.bookRepository = bookRepository;
 		this.settings = settings;
 		this.fetchSize = this.settings.getFetchsize();
 	}
@@ -39,6 +44,7 @@ public class GenreService {
     public String getGenres(Model model, 
 							@ModelAttribute("filter") Optional<FilterByName> filter,
 					        BindingResult result,
+					        @RequestParam("book") Optional<Integer> book,
 					        @RequestParam("page") Optional<Integer> page, 
 					        @RequestParam("size") Optional<Integer> size) {
     	
@@ -52,7 +58,7 @@ public class GenreService {
     	if (nameFilter != null && !nameFilter.getName().equals("")) {
     		filters.put("name", nameFilter.getName());
     	}    	
-    	genrePage = repository.findAllByFilters(filters, PageRequest.of(currentPage - 1, pageSize, Sort.by("id").ascending()));
+    	genrePage = genreRepository.findAllByFilters(filters, PageRequest.of(currentPage - 1, pageSize, Sort.by("id").ascending()));
 
         model.addAttribute("genrePage", genrePage);
         
@@ -66,7 +72,15 @@ public class GenreService {
         
         model.addAttribute("currentPage", currentPage);
         
-        return "genre_all";    	
+        int bookId = book.orElse(-1);
+        if (bookId == -1) {
+            return "genre_all";       	
+        } else {
+        	Book bookById = bookRepository.findById(bookId).orElseThrow(NotFoundException::new);
+        	BookDto bookDto = BookDto.toDto(bookById);
+            model.addAttribute("bookDto", bookDto); 
+            return "genre_book";
+        } 	
     	
     }
     
@@ -80,14 +94,14 @@ public class GenreService {
     public String saveNewGenre(@ModelAttribute("genreDto") GenreDto genreDto,
 			   				   Model model) {
 		Genre genre = GenreDto.toDomainObject(genreDto);   	
-		repository.save(genre);     
+		genreRepository.save(genre);     
 		
 		return "redirect:/genres";        
 	}    
     
     public String editGenre(@PathVariable("id") int id, 
     						Model model) {
-    	Genre genre = repository.findById(id).orElseThrow(NotFoundException::new);
+    	Genre genre = genreRepository.findById(id).orElseThrow(NotFoundException::new);
     	GenreDto genreDto = GenreDto.toDto(genre);
         model.addAttribute("genreDto", genreDto);
         
@@ -98,9 +112,9 @@ public class GenreService {
 							@ModelAttribute("genreDto") GenreDto genreDto,
 						    Model model) {
 		Genre updGenre = GenreDto.toDomainObject(genreDto);
-		Genre genre = repository.findById(updGenre.getId()).orElseThrow(NotFoundException::new);
+		Genre genre = genreRepository.findById(updGenre.getId()).orElseThrow(NotFoundException::new);
 		genre.setName(updGenre.getName());
-		repository.save(genre);
+		genreRepository.save(genre);
 		
 		return "redirect:/genres";        
 	}       

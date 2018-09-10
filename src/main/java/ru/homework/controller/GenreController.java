@@ -30,9 +30,10 @@ public class GenreController {
     public String getGenres(Model model, 
     						@ModelAttribute("filter") Optional<FilterByName> filter,
 			    	        BindingResult result,
+			    	        @RequestParam("book") Optional<Integer> book,
 			    	        @RequestParam("page") Optional<Integer> page, 
 			    	        @RequestParam("size") Optional<Integer> size) {
-    	return service.getGenres(model, filter, result, page, size);  	
+    	return service.getGenres(model, filter, result, book, page, size);  	
     }    
 	
     @GetMapping("/genres/add")

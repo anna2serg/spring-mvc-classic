@@ -26,7 +26,7 @@
 		<div class="row">			
 	        <label for="genre-input">Жанр:</label>
 	        <input id="genre-input" readonly="readonly" name="genre" type="text" th:value="*{genre.name}" value="Детская литература"/>
-			<a th:href="@{/books/{id}/genre(id=${bookDto.id})}" href="genre_all.html">Изменить</a>			
+			<a th:href="@{/genres(book=*{id})}" href="genre_book.html">Изменить</a>			
 	    </div>		
 
 		<table class="list">
@@ -41,8 +41,8 @@
 					<td th:text="${author.surname} + ' ' + 
 								 ${author.firstname} + ' ' + 
 								 ${author.middlename!=null?author.middlename:''}">Автор букваря</td>
-					<td>
-						<a th:href="@{/authors/{id}(id=${bookDto.id})}" href="author_edit.html">Удалить</a>
+					<td>			
+						<a th:href="@{/books/__${bookDto.id}__/authors/__${author.id}__}" href="author_edit.html">Удалить</a>
 					</td>
 				</tr>
 				<tr>
