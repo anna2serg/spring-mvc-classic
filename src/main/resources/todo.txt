@@ -1,0 +1,22 @@
+﻿--13, 14 thymeleaf
+
+тесты https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html
+
+
+удаление всех сущностей
+удаление автора
+
+bootstrap
+
+
+
+--11, 12 mongo
+
+
+
+
+--common--
+
+IDEA
+run from cmd
+about transactions  
