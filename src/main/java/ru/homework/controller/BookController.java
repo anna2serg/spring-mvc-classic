@@ -34,12 +34,27 @@ public class BookController {
         return service.getBooks(model, filter, result, page, size);
     } 
     
+    //Запрос на добавление книги 
+    @GetMapping("/books/add")
+    public String addNewBook(Model model) {
+        return service.addNewBook(model);
+    }    
+
+    //Сохранение добавленной книги
+    @PostMapping("/books/add")
+    public String saveNewBook(@ModelAttribute("bookDto") BookDto bookDto,
+    						   Model model) {
+        return service.saveNewBook(bookDto, model);        
+    }       
+    
+    //Запрос на редактирование книги
     @GetMapping("/books/{id}")
     public String editBook(@PathVariable("id") int id, 
     					   Model model) {
         return service.editBook(id, model);
     }   
     
+    //Запрос на сохранение отредактированной книги
     @PostMapping("/books/{id}")
     public String saveBook(@PathVariable("id") int id,
     					   @ModelAttribute("bookDto") BookDto bookDto,

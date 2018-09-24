@@ -76,15 +76,22 @@ public class GenreService {
         if (bookId == -1) {
             return "genre_all";       	
         } else {
-        	Book bookById = bookRepository.findById(bookId).orElseThrow(NotFoundException::new);
-        	BookDto bookDto = BookDto.toDto(bookById);
-            model.addAttribute("bookDto", bookDto); 
+        	Book bookById = null;
+        	BookDto bookDto = null;
+        	if (bookId != 0) {
+            	bookById = bookRepository.findById(bookId).orElseThrow(NotFoundException::new); 
+            	bookDto = BookDto.toDto(bookById);
+        	} else {
+        		bookDto = new BookDto();
+        	}
+        	
+            model.addAttribute("bookDto", bookDto);              	
             return "genre_book";
         } 	
     	
     }
     
-    public String addGenre(Model model) {
+    public String addNewGenre(Model model) {
     	GenreDto genreDto = new GenreDto();
         model.addAttribute("genreDto", genreDto);
         

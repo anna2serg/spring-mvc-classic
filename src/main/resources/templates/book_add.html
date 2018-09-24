@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Добавление информации о книге</title>
+	<link rel="stylesheet" type="text/css" media="all" href="../static/style.css" th:href="@{/style.css}" >
+    <style>
+    </style>
+</head>
+<body>
+
+<form id="book-add-form" th:object="${bookDto}" th:action="@{/books/{id}(id=${bookDto.id})}" th:method="post" action="book_all.html">
+	<div>
+	    <h1>Информация о книге:</h1>
+		
+		<div class="row">		
+	        <label for="name-input">Наименование:</label>
+	        <input id="name-input" name="name" type="text" th:value="*{name}" value=""/>	
+		</div>
+		
+		<div class="row">			
+	        <label for="genre-input">Жанр:</label>
+	        <input id="genre-input" readonly="readonly" name="genre" type="text" th:value="${genreDto.name}" value=""/>
+			<a th:href="@{/genres(book=*{id})}" href="genre_book.html">Изменить</a>			
+	    </div>		
+
+		<table class="list">
+			<thead>
+				<tr>
+					<th>Авторы</th>
+					<th>Действия</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="author,stats:${authorsDto}">
+					<td th:text="${author.surname} + ' ' + 
+								 ${author.firstname} + ' ' + 
+								 ${author.middlename!=null?author.middlename:''}">Автор букваря</td>
+					<td>			
+						<a th:href="@{/books/__${bookDto.id}__/authors/__${author.id}__}" href="author_edit.html">Удалить</a>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<a th:href="@{/authors/}" href="author_edit.html">Добавить автора</a>
+					</td>		
+				</tr>
+			</tbody>
+		</table>		
+		
+	    <div class="row">
+	        <button type="submit">Сохранить</button>
+	    </div>
+	</div>	    
+</form>
+
+</body>
+</html>

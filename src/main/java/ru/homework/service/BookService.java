@@ -1,8 +1,10 @@
 package ru.homework.service;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -18,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.homework.common.FilterByName;
 import ru.homework.configuration.AppSettings;
+import ru.homework.domain.Author;
 import ru.homework.domain.Book;
 import ru.homework.dto.BookDto;
+import ru.homework.dto.GenreDto;
 import ru.homework.exception.NotFoundException;
 import ru.homework.repository.BookRepository;
 
@@ -70,6 +74,26 @@ public class BookService {
 		model.addAttribute("currentPage", currentPage);
 		return "book_all";
 	} 
+    
+    public String addNewBook(Model model) {
+    	BookDto bookDto = new BookDto();
+    	GenreDto genreDto = new GenreDto();
+    	Set<Author> authorsDto = new HashSet<Author>();
+    	
+        model.addAttribute("bookDto", bookDto);
+        model.addAttribute("genreDto", genreDto);
+        model.addAttribute("authorsDto", authorsDto);
+        
+        return "book_add";
+    }          
+    
+    public String saveNewBook(@ModelAttribute("bookDto") BookDto bookDto,
+			   				  Model model) {
+    	Book book = BookDto.toDomainObject(bookDto);   	
+		repository.save(book);     
+		
+		return "redirect:/books";        
+	}
     
     public String editBook(@PathVariable("id") int id,
     					   Model model) {

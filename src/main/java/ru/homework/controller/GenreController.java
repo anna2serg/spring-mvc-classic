@@ -26,6 +26,10 @@ public class GenreController {
         this.service = service;
     }	
     
+    /* Запрос списка жанров. Режимы:
+     * 1. просто список
+     * 2. для книги (задан book)
+     * */
     @GetMapping("/genres")
     public String getGenres(Model model, 
     						@ModelAttribute("filter") Optional<FilterByName> filter,
@@ -36,23 +40,28 @@ public class GenreController {
     	return service.getGenres(model, filter, result, book, page, size);  	
     }    
 	
+    
+    //Запрос на добавление жанра 
     @GetMapping("/genres/add")
-    public String addGenre(Model model) {
-        return service.addGenre(model);
+    public String addNewGenre(Model model) {
+        return service.addNewGenre(model);
     }    
     
+    //Сохранение добавленного жанра
     @PostMapping("/genres/add")
     public String saveNewGenre(@ModelAttribute("genreDto") GenreDto genreDto,
     						   Model model) {
         return service.saveNewGenre(genreDto, model);        
     }       
     
+    //Запрос на редактирование жанра 
     @GetMapping("/genres/{id}")
     public String editGenre(@PathVariable("id") int id, 
     						Model model) {
         return service.editGenre(id, model);
     }    
     
+    //Сохранение отредактированного жанра
     @PostMapping("/genres/{id}")
     public String saveGenre(@PathVariable("id") int id,
     						@ModelAttribute("genreDto") GenreDto genreDto,
